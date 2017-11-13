@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+  app:
+    image: golang:alpine
+    container_name: Padevusplatvorm_go
+    networks:
+      - main
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/go/src/Padevusplatvorm-be
+    working_dir: /go/src/Padevusplatvorm-be
+    command: go run main.go
+
+networks:
+  main:
