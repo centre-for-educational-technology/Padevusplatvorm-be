@@ -2,10 +2,16 @@
 ## Technologies used:
 * [Golang](https://golang.org/)
 * [Govendor](https://github.com/kardianos/govendor)
-* [Gorilla web toolkit](http://www.gorillatoolkit.org/)
+* [Gin HTTP web framework](https://gin-gonic.github.io/gin/)
+* [Go MySQL Driver](https://github.com/go-sql-driver/mysql)
+    * [Go database/sql tutorial](http://go-database-sql.org/index.html)
 * [Docker & Docker compose](https://www.docker.com/)
+* [MariaDB Docker](https://hub.docker.com/_/mariadb/)
+* [Golang Docker](https://hub.docker.com/_/golang/)
 
 # For Development
+## Install Golang
+    [Golang](https://golang.org/)
 ## Install Docker Compose and it's Prerequisites
 [Docker compose](https://docs.docker.com/compose/install/)
 ## Set up correct Go path
@@ -35,4 +41,10 @@
     $ docker-compose up
 
 ## The API should be up and running
-    http://localhost:8000/
+    http://localhost:8080/
+
+## Docker network ip for mariadb
+    docker network inspect padevusplatvormbe_app-tier
+
+# Database
+    Database is stored in ./data directory outside the docker container for simple backups. See docker-compose.yml "mariadb:, volumes:"
