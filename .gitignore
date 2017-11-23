@@ -1,3 +1,9 @@
+# Project specific 
+# Ignore database folder ./data
+data/
+
+###################
+
 # General
 .DS_Store
 .AppleDouble
