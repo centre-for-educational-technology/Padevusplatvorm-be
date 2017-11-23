@@ -1,77 +1,100 @@
-// This code is for testing purpose only
-
 package main
 
 import (
-    "encoding/json"
-    "github.com/gorilla/mux"
-    "log"
-    "net/http"
+	"fmt"
+	"log"
+
+	"database/sql"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-// The Person Type (more like an object)
-type Person struct {
-    ID        string   `json:"id,omitempty"`
-    Firstname string   `json:"firstname,omitempty"`
-    Lastname  string   `json:"lastname,omitempty"`
-    Address   *Address `json:"address,omitempty"`
-}
-// The person Address
-type Address struct {
-    City  string `json:"city,omitempty"`
-    State string `json:"state,omitempty"`
+// Global sql.DB to access the database by all handlers
+var db *sql.DB
+var err error
+
+// User global struct
+type User struct {
+	id int
+	name string
 }
 
-var people []Person
-
-// Display all from the people var
-func GetPeople(w http.ResponseWriter, r *http.Request) {
-    json.NewEncoder(w).Encode(people)
+func getUser(c *gin.Context) {
+	var (
+		user User
+		result gin.H
+	)
+	id := c.Param("id")
+	row := db.QueryRow("select id, name from test where id = ?;", id)
+	err = row.Scan(&user.id, &user.name)
+	if err != nil {
+		result = gin.H{
+			"result": nil,
+			"count": 0,
+		}
+	}else {
+		result = gin.H{
+			"result": user,
+			"count": 1,
+		}
+	}
+	c.JSON(200, result)
 }
 
-// Display a single data
-func GetPerson(w http.ResponseWriter, r *http.Request) {
-    params := mux.Vars(r)
-    for _, item := range people {
-        if item.ID == params["id"] {
-            json.NewEncoder(w).Encode(item)
-            return
-        }
-    }
-    json.NewEncoder(w).Encode(&Person{})
+func getAllUsers(c *gin.Context) {
+	var (
+		user User
+		tests []User
+	)
+	rows, err := db.Query("select id, name from test;")
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	for rows.Next() {
+		err = rows.Scan(&user.id, &user.name)
+		tests = append(tests, user)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+	}
+	defer rows.Close()
+	c.JSON(200, gin.H{
+		"result": tests,
+		"count": len(tests),
+	})
 }
 
-// create a new item
-func CreatePerson(w http.ResponseWriter, r *http.Request) {
-    params := mux.Vars(r)
-    var person Person
-    _ = json.NewDecoder(r.Body).Decode(&person)
-    person.ID = params["id"]
-    people = append(people, person)
-    json.NewEncoder(w).Encode(people)
+func ping(c *gin.Context){
+	c.JSON(200, gin.H{
+		"message": "pong",
+		"tere": "kaks",
+	})
 }
 
-// Delete an item
-func DeletePerson(w http.ResponseWriter, r *http.Request) {
-    params := mux.Vars(r)
-    for index, item := range people {
-        if item.ID == params["id"] {
-            people = append(people[:index], people[index+1:]...)
-            break
-        }
-        json.NewEncoder(w).Encode(people)
-    }
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+	router.GET("/ping", ping)
+	router.GET("/user/:id", getUser)
+	router.GET("/users", getAllUsers)
+	return router
 }
 
 // main function to boot up everything
 func main() {
-    router := mux.NewRouter()
-    people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &Address{City: "City X", State: "State X"}})
-    people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &Address{City: "City Z", State: "State Y"}})
-    router.HandleFunc("/people", GetPeople).Methods("GET")
-    router.HandleFunc("/people/{id}", GetPerson).Methods("GET")
-    router.HandleFunc("/people/{id}", CreatePerson).Methods("POST")
-	router.HandleFunc("/people/{id}", DeletePerson).Methods("DELETE")
-	
-    log.Fatal(http.ListenAndServe(":8000", router))
+	// open db connection
+	db, err = sql.Open("mysql",
+		"root:example@tcp(172.18.0.2:3306)/Padevusplatvorm")
+	// if there is an error opening the connection, handle it
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer the close till after the main function has finished
+	// executing
+	defer db.Close()
+
+	r := setupRouter()
+	// Listen and Server in 0.0.0.0:8080
+	r.Run(":8080")
+
 }
