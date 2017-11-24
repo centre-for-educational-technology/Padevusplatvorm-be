@@ -12,14 +12,24 @@
 # For Development
 ## Install Golang
     [Golang](https://golang.org/)
-## Install Docker Compose and it's Prerequisites
-[Docker compose](https://docs.docker.com/compose/install/)
+
 ## Set up correct Go path
 ### OSX example:
-    export GOPATH=$HOME/golang
+    It's best to add these lines to ~/.zshrc or ~/.bashrc (depending on what shell you use):
+    export GOPATH=$HOME/go
     export GOROOT=/usr/local/opt/go/libexec
     export PATH=$PATH:$GOPATH/bin
     export PATH=$PATH:$GOROOT/bin
+
+## Clone repository
+    For this project docker-compose.yml is looking for ~/go/src/Padevusplatvorm-be
+    So it is best to use the same GOPATH or change the volumes: in docker-compose.yml
+
+    For example (SSH):
+    $ cd ~/go; git clone git@github.com:centre-for-educational-technology/Padevusplatvorm-be.git
+
+## Install Docker Compose and it's Prerequisites
+[Docker compose](https://docs.docker.com/compose/install/)
 
 ## This will print our environment for inside of our container
     $ docker-compose run app go env
@@ -47,4 +57,8 @@
     docker network inspect padevusplatvormbe_app-tier
 
 # Database
-    Database is stored in ./data directory outside the docker container for simple backups. See docker-compose.yml "mariadb:, volumes:"
+    Database is stored in ./data/db directory outside the docker container for simple backups. 
+    See docker-compose.yml 
+    mariadb:
+        volumes: 
+            - ./data/db:/var/lib/mysql
