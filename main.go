@@ -16,68 +16,8 @@ var err error
 
 // User global struct
 type User struct {
-	id int
-	name string
-}
-
-func getUser(c *gin.Context) {
-	var (
-		user User
-		result gin.H
-	)
-	id := c.Param("id")
-	row := db.QueryRow("select id, name from test where id = ?;", id)
-	err = row.Scan(&user.id, &user.name)
-	if err != nil {
-		result = gin.H{
-			"result": nil,
-			"count": 0,
-		}
-	}else {
-		result = gin.H{
-			"result": user,
-			"count": 1,
-		}
-	}
-	c.JSON(200, result)
-}
-
-func getAllUsers(c *gin.Context) {
-	var (
-		user User
-		tests []User
-	)
-	rows, err := db.Query("select id, name from test;")
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-	for rows.Next() {
-		err = rows.Scan(&user.id, &user.name)
-		tests = append(tests, user)
-		if err != nil {
-			fmt.Print(err.Error())
-		}
-	}
-	defer rows.Close()
-	c.JSON(200, gin.H{
-		"result": tests,
-		"count": len(tests),
-	})
-}
-
-func ping(c *gin.Context){
-	c.JSON(200, gin.H{
-		"message": "pong",
-		"tere": "kaks",
-	})
-}
-
-func setupRouter() *gin.Engine {
-	router := gin.Default()
-	router.GET("/ping", ping)
-	router.GET("/user/:id", getUser)
-	router.GET("/users", getAllUsers)
-	return router
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 // main function to boot up everything
@@ -97,4 +37,73 @@ func main() {
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8080")
 
+}
+
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+	router.GET("/ping", ping)
+	router.GET("/user/:id", getUser)
+	router.GET("/users", getAllUsers)
+	return router
+}
+
+func getUser(c *gin.Context) {
+	var (
+		user   User
+		result gin.H
+	)
+	id := c.Param("id")
+	row := db.QueryRow("select id, name from test where id = ?;", id)
+	err = row.Scan(&user.ID, &user.Name)
+	if err != nil {
+		result = gin.H{
+			"result": nil,
+			"count":  0,
+		}
+	} else {
+		result = gin.H{
+			"result": user,
+			"count":  1,
+		}
+	}
+	c.JSON(200, result)
+}
+
+func getAllUsers(c *gin.Context) {
+	var (
+		user  User
+		users []User
+	)
+	rows, err := db.Query("SELECT id, name FROM test;")
+	if err != nil {
+		fmt.Print(err)
+	}
+	for rows.Next() {
+		err = rows.Scan(&user.ID, &user.Name)
+		users = append(users, user)
+		if err != nil {
+			fmt.Print(err)
+		}
+	}
+	defer rows.Close()
+
+	if len(users) <= 0 {
+		c.JSON(404, gin.H{
+			"status":  404,
+			"message": "No users found",
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"status": 200,
+			"result": users,
+			"count":  len(users),
+		})
+	}
+}
+
+func ping(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "pong",
+		"tere":    "kaks",
+	})
 }
