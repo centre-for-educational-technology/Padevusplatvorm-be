@@ -4,14 +4,14 @@ services:
   app:
     image: golang:alpine
     restart: always
-    container_name: Padevusplatvorm_go
+    container_name: Padevusplatvorm-be
     networks:
       - app-tier
     ports:
       - 8080:8080
     volumes:
-      - .:/go/src/Padevusplatvorm-be
-    working_dir: /go/src/Padevusplatvorm-be
+      - .:/go/src/github.com/centre-for-educational-technology/Padevusplatvorm-be
+    working_dir: /go/src/github.com/centre-for-educational-technology/Padevusplatvorm-be
     depends_on:
       - mariadb
     command: go run main.go
