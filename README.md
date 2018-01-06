@@ -23,7 +23,7 @@
 
 ## Install Golang
 
-    [Golang](https://golang.org/)
+[Golang](https://golang.org/)
 
 ## Set up correct Go path
 
