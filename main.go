@@ -53,7 +53,7 @@ func getUser(c *gin.Context) {
 		result gin.H
 	)
 	id := c.Param("id")
-	row := db.QueryRow("select id, name from test where id = ?;", id)
+	row := db.QueryRow("select id, name from users where id = ?;", id)
 	err = row.Scan(&user.ID, &user.Name)
 	if err != nil {
 		result = gin.H{
@@ -74,7 +74,7 @@ func getAllUsers(c *gin.Context) {
 		user  User
 		users []User
 	)
-	rows, err := db.Query("SELECT id, name FROM test;")
+	rows, err := db.Query("SELECT id, name FROM users;")
 	if err != nil {
 		fmt.Print(err)
 	}
