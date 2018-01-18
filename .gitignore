@@ -2,8 +2,6 @@
 # Ignore database folder ./data
 data/
 
-###################
-
 # General
 .DS_Store
 .AppleDouble
@@ -11,7 +9,6 @@ data/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
@@ -70,3 +67,6 @@ Session.vim
 # Auto-generated tag files
 tags
 main
+
+# GoLand
+.idea
