@@ -1,4 +1,4 @@
-package models
+package config
 
 import (
 	"database/sql"
@@ -7,22 +7,19 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-var err error
+var DB *sql.DB
 
 // InitDB initialize database connection
 func InitDB(dataSourceName string) {
 	// open db connection
-	db, err = sql.Open("mysql", dataSourceName)
+	var err error
+	DB, err = sql.Open("mysql", dataSourceName)
 
 	// if there is an error opening the connection, handle it
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = db.Ping(); err != nil {
+	if err = DB.Ping(); err != nil {
 		log.Fatal(err)
 	}
-	// defer the close till after the main function has finished
-	// executing
-	//defer db.Close()
 }
