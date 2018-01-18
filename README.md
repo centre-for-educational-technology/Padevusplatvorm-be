@@ -16,7 +16,7 @@
 1. Install Golang
 2. go get repository
 3. Install docker & docker-compose
-4. Use $docker-compose up
+4. Use docker-compose up
 5. Import or create tables for database
 
 ## Install Golang
