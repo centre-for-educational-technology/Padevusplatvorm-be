@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// DB - Global DB
 var DB *sql.DB
 
 // InitDB initialize database connection
