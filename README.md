@@ -11,8 +11,6 @@
 * [MariaDB Docker](https://hub.docker.com/_/mariadb/)
 * [Golang Docker](https://hub.docker.com/_/golang/)
 
-# For Development
-
 ## Quick guide
 
 1. Install Golang
@@ -38,9 +36,9 @@
 ## Clone repository
 
     It`s best to use "go get" command:
-    $go get github.com/centre-for-educational-technology/Padevusplatvorm-be
+    go get github.com/centre-for-educational-technology/Padevusplatvorm-be
 
-    For help: $go help get
+    For help: go help get
 
 ## Install Docker Compose and it's Prerequisites
 
@@ -62,14 +60,10 @@
 
     docker-compose run app go env
 
-## After the vendor command we compose-up
+## Database
 
-    docker-compose up
-
-# Database
-
-    Database is stored in ./data/db directory outside the docker container for simple backups. 
-    See docker-compose.yml 
+    Database is stored in ./data/db directory outside the docker container for simple backups.
+    See docker-compose.yml
     mariadb:
-        volumes: 
+        volumes:
             - ./data/db:/var/lib/mysql
