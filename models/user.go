@@ -17,7 +17,7 @@ type Model struct {
 	DeletedAt *time.Time
 }
 
-// User global struct
+// User model "extends" above gorm Model
 type User struct {
 	gorm.Model
 	Name     string
@@ -25,7 +25,7 @@ type User struct {
 	Password string
 }
 
-// CreateUser - Register a new user
+// CreateUser - create a new User
 func CreateUser(c *gin.Context) {
 	var user User
 	c.BindJSON(&user)

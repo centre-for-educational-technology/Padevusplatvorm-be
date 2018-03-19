@@ -20,12 +20,10 @@ func setupRouter() *gin.Engine {
 	return router
 }
 
-// main function to boot up everything
 func main() {
 	config.InitDB("root:example@tcp(172.18.0.2:3306)/Padevusplatvorm?charset=utf8&parseTime=True&loc=Local")
 	config.DB.AutoMigrate(&models.User{})
 
 	r := setupRouter()
-	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8080")
 }

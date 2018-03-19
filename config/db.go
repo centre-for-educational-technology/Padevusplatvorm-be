@@ -13,7 +13,6 @@ var DB *gorm.DB
 func InitDB(dataSourceName string) {
 	// open db connection
 	var err error
-	//DB, err = sql.Open("mysql", dataSourceName)
 	DB, err = gorm.Open("mysql", dataSourceName)
 
 	// if there is an error opening the connection, handle it
