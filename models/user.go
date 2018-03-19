@@ -1,18 +1,50 @@
 package models
 
 import (
-	"fmt"
+	"time"
+
+	"github.com/jinzhu/gorm"
 
 	"github.com/centre-for-educational-technology/Padevusplatvorm-be/config"
 	"github.com/gin-gonic/gin"
 )
 
-// User global struct
-type User struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+// Model - gorm model defaults
+type Model struct {
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
+// User global struct
+type User struct {
+	gorm.Model
+	Name     string
+	Email    string
+	Password string
+}
+
+// CreateUser - Register a new user
+func CreateUser(c *gin.Context) {
+	var user User
+	c.BindJSON(&user)
+	if len(user.Name) <= 0 {
+		c.JSON(400, gin.H{
+			"status":  400,
+			"message": "Name cant be empty!",
+		})
+	} else {
+		config.DB.Create(&user)
+		c.JSON(200, gin.H{
+			"status":  200,
+			"result":  user,
+			"message": "User created",
+		})
+	}
+}
+
+/*
 // GetAllUsers - Get all users
 func GetAllUsers(c *gin.Context) {
 	var (
@@ -68,3 +100,4 @@ func GetUser(c *gin.Context) {
 	}
 	c.JSON(200, result)
 }
+*/
