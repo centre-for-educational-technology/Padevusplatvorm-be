@@ -67,3 +67,49 @@
     mariadb:
         volumes:
             - ./data/db:/var/lib/mysql
+
+## API Routes
+
+### Authentication
+
+     POST /api/v1/auth/register
+
+Body apllication/JSON:
+
+    {
+        "Name": "name",
+        "Email": "email@email.email",
+        "Password": "Password"
+    }
+
+### GET /api/v1/user/:id
+
+### GET/api/v1/users
+
+    POST /api/v1/standard/create
+
+Body apllication/JSON:
+
+    {
+        "Name": "name",
+        "EkrLevel": 10,
+        "Description": "description",
+        "Image": "image path",
+        "Competencies": [{
+            "Name": "name",
+            "Description": "description",
+            "QualificationLevelRequirementsDescription": "description",
+            "Knowledges": [{
+                "Name": "knowledge1",
+                "Description": "description
+            }],
+            "Skills": [{
+                "Name": "skill1",
+                "Description": "description
+            }]
+        }]
+    }
+
+### GET /api/v1/standard/:id
+
+### GET /api/v1/standars
