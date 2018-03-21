@@ -1,23 +1,13 @@
 package models
 
 import (
-	"time"
-
 	"github.com/jinzhu/gorm"
 
 	"github.com/centre-for-educational-technology/Padevusplatvorm-be/config"
 	"github.com/gin-gonic/gin"
 )
 
-// Model - gorm model defaults
-type Model struct {
-	ID        uint `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-}
-
-// User model "extends" above gorm Model
+// User model "extends" gorm.Model
 type User struct {
 	gorm.Model
 	Name     string
@@ -28,6 +18,7 @@ type User struct {
 // CreateUser - create a new User
 func CreateUser(c *gin.Context) {
 	var user User
+
 	c.BindJSON(&user)
 	if len(user.Name) <= 0 {
 		c.JSON(400, gin.H{
@@ -44,60 +35,47 @@ func CreateUser(c *gin.Context) {
 	}
 }
 
-/*
-// GetAllUsers - Get all users
+// GetAllUsers - returns all users from db
 func GetAllUsers(c *gin.Context) {
-	var (
-		user  User
-		users []User
-	)
-	rows, err := config.DB.Query("SELECT id, name FROM users;")
-	if err != nil {
-		fmt.Print(err)
-	}
-	for rows.Next() {
-		err = rows.Scan(&user.ID, &user.Name)
-		users = append(users, user)
-		if err != nil {
-			fmt.Print(err)
-		}
-	}
-	defer rows.Close()
+	var users []User
 
-	if len(users) <= 0 {
+	if err := config.DB.Find(&users).Error; err != nil {
 		c.JSON(404, gin.H{
-			"status":  404,
-			"message": "No users found",
+			"status": 404,
+			"error":  err.Error(),
 		})
 	} else {
 		c.JSON(200, gin.H{
 			"status": 200,
-			"result": users,
 			"count":  len(users),
+			"result": users,
 		})
 	}
 }
 
-// GetUser - Get user by id
+// GetUser - return user by id
 func GetUser(c *gin.Context) {
-	var (
-		user   User
-		result gin.H
-	)
 	id := c.Param("id")
-	row := config.DB.QueryRow("select id, name from users where id = ?;", id)
-	err := row.Scan(&user.ID, &user.Name)
-	if err != nil {
-		result = gin.H{
-			"result": nil,
-			"count":  0,
-		}
+	var user User
+
+	if err := config.DB.First(&user, id).Error; err != nil {
+		c.JSON(404, gin.H{
+			"status":  404,
+			"message": "User with id=" + id + " not found",
+			"error":   err.Error(),
+		})
 	} else {
-		result = gin.H{
+		c.JSON(200, gin.H{
+			"status": 200,
 			"result": user,
-			"count":  1,
-		}
+		})
 	}
-	c.JSON(200, result)
 }
-*/
+
+func UpdateUser() {
+	//TODO
+}
+
+func DeleteUser() {
+	//TODO
+}
