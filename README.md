@@ -82,9 +82,9 @@ Body apllication/JSON:
         "Password": "Password"
     }
 
-### GET /api/v1/user/:id
+GET /api/v1/user/:id
 
-### GET/api/v1/users
+GET/api/v1/users
 
     POST /api/v1/standard/create
 
@@ -110,6 +110,6 @@ Body apllication/JSON:
         }]
     }
 
-### GET /api/v1/standard/:id
+GET /api/v1/standard/:id
 
-### GET /api/v1/standars
+GET /api/v1/standars
