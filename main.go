@@ -21,13 +21,20 @@ func setupRouter() *gin.Engine {
 		v1.GET("/standard/:id", models.GetQualificationStandard)
 		v1.POST("/standard/create", models.CreateQualificationStandard)
 		v1.GET("/standards", models.GetAllQualificationStandards)
+
+		v1.POST("/subject/create", models.CreateSubject)
+		v1.GET("/subjects", models.GetAllSubjects)
 	}
 	return router
 }
 
 func main() {
 	config.InitDB("root:example@tcp(172.18.0.2:3306)/Padevusplatvorm?charset=utf8&parseTime=True&loc=Local")
-	config.DB.AutoMigrate(&models.User{}, &models.QualificationStandard{}, &models.Competency{}, &models.Knowledge{}, &models.Skill{})
+	defer config.DB.Close()
+
+	config.DB.AutoMigrate(&models.User{})
+	config.DB.AutoMigrate(&models.QualificationStandard{}, &models.Competency{}, &models.Knowledge{}, &models.Skill{})
+	config.DB.AutoMigrate(&models.Subject{}, &models.SubjectCompetency{})
 
 	r := setupRouter()
 	r.Run(":8080")
