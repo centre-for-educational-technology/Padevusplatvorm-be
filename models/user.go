@@ -17,19 +17,25 @@ type User struct {
 func CreateUser(c *gin.Context) {
 	var user User
 
-	c.BindJSON(&user)
-	if len(user.Name) <= 0 {
+	if err := c.BindJSON(&user); err != nil {
 		c.JSON(400, gin.H{
-			"status":  400,
-			"message": "Name cant be empty!",
+			"status": 400,
+			"error":  "json decoding: " + err.Error(),
 		})
 	} else {
-		config.DB.Create(&user)
-		c.JSON(200, gin.H{
-			"status":  200,
-			"result":  user,
-			"message": "User created",
-		})
+		if len(user.Name) <= 0 {
+			c.JSON(400, gin.H{
+				"status":  400,
+				"message": "Name cant be empty!",
+			})
+		} else {
+			config.DB.Create(&user)
+			c.JSON(200, gin.H{
+				"status":  200,
+				"result":  user,
+				"message": "User created",
+			})
+		}
 	}
 }
 
@@ -69,10 +75,12 @@ func GetUser(c *gin.Context) {
 	}
 }
 
+/* TODO: UpdateUser
 func UpdateUser() {
-	//TODO
 }
+/*
 
+/* TODO: DeletUser
 func DeleteUser() {
-	//TODO
 }
+*/

@@ -13,6 +13,7 @@ type QualificationStandard struct {
 	Description  string       `json:"description"`
 	Image        string       `json:"image"`
 	Competencies []Competency `json:"competencies"`
+	Subjects     []Subject    `json:"subjects"`
 }
 
 // Competency model for One-To-Many relatsion
@@ -28,6 +29,8 @@ type Competency struct {
 
 // Knowledge model for One-To-Many relatsion
 type Knowledge struct {
+	// TODO: Map Kowledge with subject selectbox
+
 	Model
 	CompetencyID uint   `json:"competencyId"`
 	Name         string `json:"name"`
@@ -36,6 +39,8 @@ type Knowledge struct {
 
 // Skill model for One-To-Many relatsion
 type Skill struct {
+	// TODO: Map Skill with subject selectbox
+
 	Model
 	CompetencyID uint   `json:"competencyId"`
 	Name         string `json:"name"`
@@ -46,20 +51,25 @@ type Skill struct {
 func CreateQualificationStandard(c *gin.Context) {
 	var standard QualificationStandard
 
-	c.BindJSON(&standard)
-	if err := config.DB.Create(&standard).Error; err != nil {
-		c.JSON(404, gin.H{
-			"status": 404,
-			"error":  err.Error(),
+	if err := c.BindJSON(&standard); err != nil {
+		c.JSON(400, gin.H{
+			"status": 400,
+			"error":  "json decoding: " + err.Error(),
 		})
 	} else {
-		c.JSON(200, gin.H{
-			"status":  200,
-			"result":  standard,
-			"message": "Standard created",
-		})
+		if err := config.DB.Create(&standard).Error; err != nil {
+			c.JSON(404, gin.H{
+				"status": 404,
+				"error":  err.Error(),
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"status":  200,
+				"result":  standard,
+				"message": "Standard created",
+			})
+		}
 	}
-
 }
 
 // GetAllQualificationStandards - returns all Qualification standards
@@ -99,3 +109,13 @@ func GetQualificationStandard(c *gin.Context) {
 		})
 	}
 }
+
+/* TODO: UpdateQualificationStandard
+func UpdateQualificationStandard() {
+}
+/*
+
+/* TODO: DeleteQualificationStandard
+func DeleteQualificationStandard() {
+}
+*/
