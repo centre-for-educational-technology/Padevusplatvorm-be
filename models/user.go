@@ -1,18 +1,16 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
-
 	"github.com/centre-for-educational-technology/Padevusplatvorm-be/config"
 	"github.com/gin-gonic/gin"
 )
 
-// User model "extends" gorm.Model
+// User model embeds model.Model
 type User struct {
-	gorm.Model
-	Name     string
-	Email    string
-	Password string
+	Model
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // CreateUser - create a new User
@@ -60,9 +58,8 @@ func GetUser(c *gin.Context) {
 
 	if err := config.DB.First(&user, id).Error; err != nil {
 		c.JSON(404, gin.H{
-			"status":  404,
-			"message": "User with id=" + id + " not found",
-			"error":   err.Error(),
+			"status": 404,
+			"error":  err.Error(),
 		})
 	} else {
 		c.JSON(200, gin.H{
