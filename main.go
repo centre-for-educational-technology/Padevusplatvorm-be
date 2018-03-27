@@ -24,6 +24,9 @@ func setupRouter() *gin.Engine {
 
 		v1.POST("/subject/create", models.CreateSubject)
 		v1.GET("/subjects", models.GetAllSubjects)
+
+		v1.POST("/curriculum/create", models.CreateCurriculum)
+		v1.GET("/curriculums", models.GetAllCurriculums)
 	}
 	return router
 }
