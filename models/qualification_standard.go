@@ -13,7 +13,6 @@ type QualificationStandard struct {
 	Description  string       `json:"description"`
 	Image        string       `json:"image"`
 	Competencies []Competency `json:"competencies"`
-	Subjects     []Subject    `json:"subjects"`
 }
 
 // Competency model for One-To-Many relatsion
@@ -29,8 +28,6 @@ type Competency struct {
 
 // Knowledge model for One-To-Many relatsion
 type Knowledge struct {
-	// TODO: Map Kowledge with subject selectbox
-
 	Model
 	CompetencyID uint   `json:"competencyId"`
 	Name         string `json:"name"`
@@ -39,8 +36,6 @@ type Knowledge struct {
 
 // Skill model for One-To-Many relatsion
 type Skill struct {
-	// TODO: Map Skill with subject selectbox
-
 	Model
 	CompetencyID uint   `json:"competencyId"`
 	Name         string `json:"name"`

@@ -16,6 +16,8 @@ type Subject struct {
 	MainLecturer            string              `json:"mainLecturer"`
 	QualificationStandardID uint                `json:"qualificationStandardId"`
 	Competencies            []SubjectCompetency `json:"competencies"`
+	Knowledges              []Knowledge         `json:"knowledges"`
+	Skills                  []Skill             `json:"skills"`
 }
 
 // SubjectCompetency model for One-To-Many relatsion
