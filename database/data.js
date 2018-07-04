@@ -2,8 +2,8 @@ const mysql = require('mysql');
 
 const databaseConfig = {
     host: 'localhost',
-    user: 'root',
-    password: '',
+    user: 'ddcmp',
+    password: 'jamamaja',
     database: 'ddcmp',
     connectionLimit: 15,
     timezone: 'Z'
