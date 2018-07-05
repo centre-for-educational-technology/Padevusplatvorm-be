@@ -7,7 +7,7 @@ const restModel = require('../rest/restModel');
  * Login user.
  */
 router.post('/login', (req, res) => {
-	try {
+    try {
         validateLogin(req, res, () => {
             users.getUser(req.body.email, req.body.password, user => {
                     if (user) {
@@ -20,7 +20,7 @@ router.post('/login', (req, res) => {
                                 res.send(base);
                             });
                         }, error => {
-                            restModel.generateErrorResponse(base=>{
+                            restModel.generateErrorResponse(base => {
                                 res.statusCode = 500;
                                 res.send(base);
                             })
@@ -35,14 +35,13 @@ router.post('/login', (req, res) => {
                 },
                 error => {
                     restModel.generateResponse(base => {
-                        base.error = error.message;
                         base.userMessage = 'Unable to login. If this error persists please contact the adminstrator.';
                         res.statusCode = 500;
                         res.send(base);
                     });
                 });
         });
-	} catch (err) {
+    } catch (err) {
         restModel.generateErrorResponse(base => {
             res.statusCode = 500;
             base.error = 'Something went wrong. Please try again.';
@@ -52,7 +51,7 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-	try {
+    try {
         if (req.session.user) {
             delete req.session.user;
             restModel.generateResponse(base => {
@@ -66,7 +65,7 @@ router.post('/logout', (req, res) => {
                 res.send(base);
             });
         }
-	} catch (err) {
+    } catch (err) {
         restModel.generateErrorResponse(base => {
             res.statusCode = 500;
             base.error = 'Something went wrong. Please try again.';
@@ -75,16 +74,40 @@ router.post('/logout', (req, res) => {
     }
 });
 
-function validateLogin(req, res, cb){
-	if (!req.body.email || !req.body.password) {
-		restModel.generateResponse(base => {
-			base.userMessage = 'Missing username or password.';
-			res.statusCode = 400;
-			res.send(base);
-		});
-		return 0;
-	}
-	cb();
+router.post('/register', (req, res) => {
+    const userToAdd = req.body;
+    try {
+        users.addUser(userToAdd, () => {
+            restModel.generateResponse(base => {
+                base.userMessage = 'User added.';
+                res.send(base);
+            });
+        }, error => {
+            restModel.generateErrorResponse(base => {
+                res.statusCode = 500;
+                base.error = error.message;
+                res.send(base);
+            });
+        });
+    } catch (err) {
+        restModel.generateErrorResponse(base => {
+            res.statusCode = 500;
+            base.error = 'Something went wrong. Please try again.';
+            res.send(base);
+        });
+    }
+});
+
+function validateLogin(req, res, cb) {
+    if (!req.body.email || !req.body.password) {
+        restModel.generateResponse(base => {
+            base.userMessage = 'Missing username or password.';
+            res.statusCode = 400;
+            res.send(base);
+        });
+        return 0;
+    }
+    cb();
 }
 
 module.exports = router;
