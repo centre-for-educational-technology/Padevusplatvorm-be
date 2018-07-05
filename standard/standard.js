@@ -2,7 +2,7 @@ const db = require('../database/data');
 const moment = require('moment');
 
 function getAllStandards(success, failure) {
-    db.query('SELECT * FROM standard', [], rows => {
+    db.query('SELECT * FROM standard WHERE deleted = 0', [], rows => {
         success(rows);
     }, error => {
         console.log(error);
@@ -11,7 +11,7 @@ function getAllStandards(success, failure) {
 }
 
 function getStandard(standardId, success, failure) {
-    db.query('SELECT * FROM standard WHERE id = ?', [standardId], rows => {
+    db.query('SELECT * FROM standard WHERE id = ? AND deleted = 0', [standardId], rows => {
         if (rows.length) {
             success(rows[0]);
         }

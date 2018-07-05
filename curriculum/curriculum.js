@@ -2,7 +2,7 @@ const db = require('../database/data');
 const moment = require('moment');
 
 function getAllCurricula(success, failure) {
-    db.query('SELECT * FROM curriculum', [], rows => {
+    db.query('SELECT * FROM curriculum WHERE deleted = 0', [], rows => {
         success(rows);
     }, error => {
         console.log(error);
@@ -13,7 +13,7 @@ function getAllCurricula(success, failure) {
 function getCurriculum(curriculumId, success, failure) {
     db.query('SELECT curriculum.*, standard.name as standardName, standard.level as standardLevel ' +
         'FROM curriculum LEFT JOIN standard ON standard.id = curriculum.standard ' +
-        'WHERE curriculum.id = ?', [curriculumId], rows => {
+        'WHERE curriculum.id = ? AND curriculum.deleted = 0', [curriculumId], rows => {
         if (rows.length) {
             success(rows[0]);
         }
@@ -62,7 +62,7 @@ function getCurriculumCourses(curriculumId, success, failure) {
     db.query('SELECT course.*, module_course.fk_module as module FROM course ' +
         'INNER JOIN module_course ON module_course.fk_course = course.id WHERE course.id IN ' +
         '(SELECT fk_course FROM module_course WHERE fk_module IN ' +
-        '(SELECT module.id FROM module WHERE module.curriculum = ?));', [curriculumId], rows => {
+        '(SELECT module.id FROM module WHERE module.curriculum = ?)) AND course.deleted = 0;', [curriculumId], rows => {
         if (rows.length) {
             success(rows);
         }
