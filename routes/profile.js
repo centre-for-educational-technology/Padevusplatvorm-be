@@ -32,8 +32,12 @@ router.get('/:userId', function (req, res) {
         const userId = req.params.userId;
         profile.getProfile(userId, retrievedProfile => {
             restModel.generateResponse(base => {
-                base.data = retrievedProfile;
-                base.userMessage = 'Retrieved profile.';
+                if (retrievedProfile) {
+                    base.data = retrievedProfile;
+                    base.userMessage = 'Retrieved profile.';
+                } else {
+                    base.userMessage = 'Profile does not exist.';
+                }
                 res.send(base);
             });
         }, error => {

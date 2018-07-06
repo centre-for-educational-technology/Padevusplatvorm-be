@@ -15,6 +15,8 @@ function getProfile(userId, success, failure) {
         [userId], rows => {
         if (rows.length) {
             success(rows[0]);
+        } else {
+            success();
         }
     }, error => {
         console.log(error);
