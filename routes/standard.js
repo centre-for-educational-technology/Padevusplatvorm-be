@@ -3,6 +3,7 @@ const router = express.Router();
 const restModel = require('../rest/restModel');
 const standard = require('../standard/standard');
 const competency = require('../competency/competency');
+const course = require('../course/course');
 
 router.get('/', function (req, res) {
     try {
@@ -59,6 +60,31 @@ router.get('/:standardId', function (req, res) {
                 })
             });
 
+        }, error => {
+            restModel.generateErrorResponse(base => {
+                res.statusCode = 500;
+                base.error = error.message;
+                res.send(base);
+            })
+        });
+    } catch (err) {
+        restModel.generateErrorResponse(base => {
+            res.statusCode = 500;
+            base.error = 'Something went wrong. Please try again.';
+            res.send(base);
+        });
+    }
+});
+
+router.get('/:standardId/courses', function (req, res) {
+    const standardId = req.params.standardId;
+    try {
+        course.getAllStandardCourses(standardId, courses => {
+            restModel.generateResponse(base => {
+                base.data = courses;
+                base.userMessage = 'Retrieved all standard coursess.';
+                res.send(base);
+            });
         }, error => {
             restModel.generateErrorResponse(base => {
                 res.statusCode = 500;

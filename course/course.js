@@ -10,9 +10,19 @@ function getAllCourses(success, failure) {
     });
 }
 
+function getAllStandardCourses(standardId, success, failure) {
+    db.query('SELECT * FROM course WHERE standard = ? AND deleted = 0', [standardId], rows => {
+        success(rows);
+    }, error => {
+        console.log(error);
+        failure(error);
+    });
+}
+
+
 function getCourse(courseId, success, failure) {
     db.query('SELECT course.*, standard.name AS standardName, standard.level AS standardLevel ' +
-        'FROM course LEFT JOIN standard ON standard.id = course.standard  WHERE course.id = ? AND course.deleted = 0', [courseId], rows => {
+        'FROM course LEFT JOIN standard ON standard.id = course.standard WHERE course.id = ? AND course.deleted = 0', [courseId], rows => {
         if (rows.length) {
             success(rows[0]);
         }
@@ -37,6 +47,7 @@ function addCourse(course, success, failure) {
 
 module.exports = {
     getAllCourses,
+    getAllStandardCourses,
     getCourse,
     addCourse
 };
