@@ -69,7 +69,7 @@ function getCurriculumCompetencyCount(curriculumId, success, failure) {
 
 function getStandardCompetencyCount(curriculumId, success, failure) {
     db.query('SELECT COUNT(*) as standardCount FROM subcompetency WHERE competency IN ' +
-        '(SELECT id FROM COMPETENCY where standard = ' +
+        '(SELECT id FROM competency WHERE standard = ' +
         '( SELECT standard FROM curriculum WHERE id = ?))', [curriculumId], rows => {
         success(rows[0].standardCount);
     }, error => {
